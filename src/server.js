@@ -3,10 +3,11 @@ import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
 import allRouters from "./api/index.js";
+import mongoose from "mongoose";
+import { errorHandler } from "./utilities/errorHandler.js";
 
 const app = express();
 
-app.use(express.json());
 const whiteList = [
   process.env.FRONTEND_DEV_URL,
   process.env.FRONTEND_CLOUD_URL,
@@ -21,9 +22,14 @@ const corsOptions = {
     }
   },
 };
-app.use(cors(corsOptions));
 
+// middlewares ***********************
+app.use(express.json());
+app.use(cors(corsOptions));
+// routers ****************************
 app.use("/api", allRouters);
+// errorHandlers **********************
+app.use(errorHandler);
 
 const server = http.createServer(app);
 
@@ -34,6 +40,16 @@ io.on("connection", (socket) => {
 });
 
 const port = process.env.PORT;
-server.listen(port, () => {
-  console.log("server is listening on port: ", port);
-});
+
+mongoose
+  .connect(process.env.MONGO_CONNECTION, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  })
+  .then(
+    server.listen(port, () => {
+      console.log("✅✅✅ Running on port", port);
+    })
+  )
+  .catch((err) => console.log(err));
