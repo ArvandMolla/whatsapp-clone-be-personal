@@ -1,19 +1,20 @@
 import mongoose from "mongoose";
+import { userSchema } from "./user";
+import messageSchema from "./message";
 
 const { Schema, model } = mongoose;
 
 const chatSchema = new Schema(
   {
-    userName: { type: String, required: true },
-    email: { type: String, required: true },
-    password: { type: String, required: true },
-    avatar: {
-      type: String,
+    members: {
+      type: [Schema.Types.ObjectId],
       required: true,
-      default: "https://picsum.photos/70/70",
+      ref: "User",
+      default: [],
     },
+    messageHistory: { type: [messageSchema], required: true, default: [] },
   },
   { timestamps: true }
 );
 
-export default model("User", userSchema);
+export default model("Chat", chatSchema);
