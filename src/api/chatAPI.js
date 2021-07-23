@@ -8,8 +8,8 @@ const chatRouter = express.Router();
 chatRouter.post("/", async (req, res, next) => {
   try {
     const newChat = new chatModel(req.body);
-    const { _id } = await newChat.save();
-    res.status(201).send({ _id });
+    const createdChat = await newChat.save();
+    res.status(201).send(createdChat);
   } catch (error) {
     next(createError(400, error));
   }
@@ -33,7 +33,6 @@ chatRouter.put("/:id/new-message", async (req, res, next) => {
     const chat = await chatModel.findById(req.params.id);
     let messages = chat.messageHistory;
     messages.push(req.body);
-    console.log("new message history: ", messages);
     const newChatObj = {
       members: chat.members,
       messageHistory: messages,

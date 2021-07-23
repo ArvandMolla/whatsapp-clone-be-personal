@@ -25,7 +25,7 @@ const corsOptions = {
 
 // middlewares ***********************
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors());
 // routers ****************************
 app.use("/api", allRouters);
 // errorHandlers **********************
@@ -37,6 +37,16 @@ const io = new Server(server);
 
 io.on("connection", (socket) => {
   console.log("a user connected with socket id: ", socket.id);
+
+  socket.on("new chat", (arg) => {
+    socket.join(arg);
+    console.log("a user joined room: ", arg);
+  });
+
+  socket.on("send message", (arg) => {
+    console.log(" new message for room: ", arg);
+    socket.to(arg).emit("new message", arg);
+  });
 });
 
 const port = process.env.PORT;

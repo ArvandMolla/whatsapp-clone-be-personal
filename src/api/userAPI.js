@@ -28,6 +28,18 @@ userRouter.get("/:id", async (req, res, next) => {
   }
 });
 
+userRouter.get("/", async (req, res, next) => {
+  try {
+    console.log(req.query);
+    const data = await userModel.find({ userName: req.query.q });
+    if (data) {
+      res.send(data);
+    } else {
+      res.send([]);
+    }
+  } catch (error) {}
+});
+
 userRouter.post("/me/chats", async (req, res, next) => {
   try {
     const myId = req.body.myId;
