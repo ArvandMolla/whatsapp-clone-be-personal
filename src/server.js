@@ -6,6 +6,7 @@ import allRouters from "./api/index.js";
 import mongoose from "mongoose";
 import { errorHandler } from "./utilities/errorHandler.js";
 
+//this is meeeee
 const app = express();
 
 const whiteList = [
