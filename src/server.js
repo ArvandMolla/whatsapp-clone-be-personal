@@ -25,7 +25,7 @@ const corsOptions = {
 
 // middlewares ***********************
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 // routers ****************************
 app.use("/api", allRouters);
 // errorHandlers **********************
