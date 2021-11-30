@@ -2,6 +2,7 @@ import express from "express";
 import { userModel } from "../models/user.js";
 import chatModel from "../models/chat.js";
 import createError from "http-errors";
+import e from "express";
 
 const userRouter = express.Router();
 
@@ -38,6 +39,19 @@ userRouter.get("/", async (req, res, next) => {
       res.send([]);
     }
   } catch (error) {}
+});
+
+userRouter.get("/all/all-users", async (req, res, next) => {
+  try {
+    const data = await userModel.find();
+    if (data) {
+      res.send(data);
+    } else {
+      res.send([]);
+    }
+  } catch (error) {
+    next(createError(500, "fetching all users failed!"));
+  }
 });
 
 userRouter.post("/me/chats", async (req, res, next) => {
